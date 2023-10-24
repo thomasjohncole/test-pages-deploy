@@ -21,7 +21,7 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: ${{ test-pages-deploy }}
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu20.04
     permissions:
       id-token: write
