@@ -1,0 +1,33 @@
+name: build
+
+on:
+  push:
+    branches: [ main, pages-deploy-branch ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:  # Allows you to run this workflow manually from the Actions tab
+
+jobs:
+  build:
+    runs-on: ubuntu20.04
+    environment: build
+    steps:
+    - uses: actions/checkout@v3
+    - name: Upload page
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: test-pages-deploy/pages-deploy-branch
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ test-pages-deploy }}
+    runs-on: ubuntu20.04
+    permissions:
+      id-token: write
+      pages: write
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1.2.8
